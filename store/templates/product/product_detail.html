@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+    <div class="product-detail-grid">
+        <div class="product-detail-image">
+            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'image/default_image.png' %}{% endif %}" alt="{{ product.name }}">
+        </div>
+
+        <div class="product-detail-info">
+            <div class="product-category">
+                <a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a>
+            </div>
+
+            <h1 class="product-title">{{ product.name }}</h1>
+            <p class="product-price">${{ product.price }}</p>
+
+            <div class="product-description">
+                {{ product.description|linebreaks }}
+            </div>
+
+            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-to-cart-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ cart_product_form }}
+                </div>
+                <button type="submit" class="add-to-cart">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+                    Add to Cart
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
