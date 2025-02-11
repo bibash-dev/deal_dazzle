@@ -67,7 +67,7 @@
                 </div>
                 <div class="summary-actions">
                     <a href="{% url 'store:product_list' %}" class="button-secondary">Continue Shopping</a>
-                    <a href="#" class="button-primary">Proceed to Checkout</a>
+                    <a href="{% url "orders:order_create" %}" class="button-primary">Proceed to Checkout</a>
                 </div>
             </div>
         </div>
