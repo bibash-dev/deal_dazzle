@@ -1,10 +1,11 @@
+from django.conf import settings
 from django.db import models
 from django.core.validators import MinValueValidator
 
 
 class Order(models.Model):
     """
-    Represents an order made by a customer.
+    Represents an orders made by a customer.
     """
     first_name = models.CharField(
         max_length=50,
@@ -41,6 +42,11 @@ class Order(models.Model):
         default=False,
         verbose_name='Paid'
     )
+    stripe_id = models.CharField(
+        max_length=250,
+        blank=True,
+        verbose_name='Stripe Id'
+    )
 
     class Meta:
         ordering = ['-created_at']
@@ -59,10 +65,19 @@ class Order(models.Model):
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.items.all())
 
+    def get_stripe_url(self):
+        if not self.stripe_id:
+            return ''
+
+        environment_path = '/test/' if '_test_' in settings.STRIPE_SECRET_KEY else '/'
+        return f'https://dashboard.stripe.com{environment_path}payments/{self.stripe_id}'
+
+
+
 
 class OrderItem(models.Model):
     """
-    Represents an item within an order.
+    Represents an item within an orders.
     """
     order = models.ForeignKey(
         Order,

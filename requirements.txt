@@ -4,3 +4,4 @@ celery
 flower
 stripe
 python-decouple
+django-weasyprint

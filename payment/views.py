@@ -16,7 +16,7 @@ def payment_process(request):
     """
     order_id = request.session.get('order_id')
     if not order_id:
-        messages.error(request, "No order found. Please place an order first.")
+        messages.error(request, "No orders found. Please place an orders first.")
         return redirect('orders:order_create')
 
     order = get_object_or_404(Order, id=order_id)
