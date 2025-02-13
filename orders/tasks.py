@@ -7,13 +7,13 @@ from .models import Order
 @shared_task
 def order_created(order_id):
     """
-    Task to send an e-mail notification when an orders is successfully created.
+    Task to send an e-mail notification when an order is successfully created.
     """
     try:
         order = Order.objects.get(id=order_id)
 
         subject = f'Order number: {order.id}'
-        message = f'Dear {order.first_name},\n\nYou have successfully placed an orders.'
+        message = f'Dear {order.first_name},\n\nYou have successfully placed an order.'
         from_email = 'admin@dealdazzle.com'
         recipient_list = [order.email]
 

@@ -4,73 +4,92 @@
 {% block title %}Your Cart • Deal Dazzle{% endblock %}
 
 {% block content %}
-<div class="cart-page">
-    <h1 class="cart-title">Shopping Cart</h1>
+<div class="wrapper">
+    <main class="main-content">
+        <div class="container">
+            <div class="cart-page">
+                <h1 class="cart-title">Shopping Cart</h1>
 
-    {% if cart|length == 0 %}
-        <div class="empty-cart">
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-            <p>Your cart is empty</p>
-            <a href="{% url 'store:product_list' %}" class="button-primary">Continue Shopping</a>
-        </div>
-    {% else %}
-        <div class="cart-grid">
-            <div class="cart-items">
-                {% for item in cart %}
-                {% with product=item.product %}
-                <div class="cart-item">
-                    <div class="cart-item-image">
-                        <a href="{{ product.get_absolute_url }}">
-                            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'image/default_image.png' %}{% endif %}" alt="{{ product.name }}">
-                        </a>
+                {% if cart|length == 0 %}
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="8" cy="21" r="1"></circle>
+                                <circle cx="19" cy="21" r="1"></circle>
+                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                            </svg>
+                        </div>
+                        <p class="empty-cart-message">Your cart is empty</p>
+                        <a href="{% url 'store:product_list' %}" class="button-primary">Continue Shopping</a>
                     </div>
-                    <div class="cart-item-details">
-                        <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
-                        <div class="cart-item-price">${{ item.price }}</div>
-                        <div class="cart-item-actions">
-                            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="quantity-form">
-                                <div class="quantity-wrapper">
-                                    {{ item.update_quantity_form.quantity }}
-                                    {{ item.update_quantity_form.override }}
+                {% else %}
+                    <div class="cart-grid">
+                        <div class="cart-items">
+                            {% for item in cart %}
+                            {% with product=item.product %}
+                            <div class="cart-item">
+                                <div class="cart-item-image">
+                                    <a href="{{ product.get_absolute_url }}">
+                                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'image/default_image.png' %}{% endif %}"
+                                             alt="{{ product.name }}">
+                                    </a>
                                 </div>
-                                <button type="submit" class="button-update">Update</button>
-                                {% csrf_token %}
-                            </form>
-                            <form action="{% url 'cart:cart_remove' product.id %}" method="post" class="remove-form">
-                                <button type="submit" class="button-remove">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                                    Remove
-                                </button>
-                                {% csrf_token %}
-                            </form>
+                                <div class="cart-item-details">
+                                    <h3>
+                                        <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                                    </h3>
+                                    <div class="cart-item-price">${{ item.price }}</div>
+                                    <div class="cart-item-actions">
+                                        <form action="{% url 'cart:cart_add' product.id %}" method="post" class="quantity-form">
+                                            <div class="quantity-wrapper">
+                                                {{ item.update_quantity_form.quantity }}
+                                                {{ item.update_quantity_form.override }}
+                                            </div>
+                                            <button type="submit" class="button-update">Update</button>
+                                            {% csrf_token %}
+                                        </form>
+                                        <form action="{% url 'cart:cart_remove' product.id %}" method="post" class="remove-form">
+                                            <button type="submit" class="button-remove">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M3 6h18"></path>
+                                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                                </svg>
+                                                Remove
+                                            </button>
+                                            {% csrf_token %}
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="cart-item-total">${{ item.total_price }}</div>
+                            </div>
+                            {% endwith %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="cart-summary">
+                            <h2>Order Summary</h2>
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span>${{ cart.get_total_price }}</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping</span>
+                                <span>Free</span>
+                            </div>
+                            <div class="summary-total">
+                                <span>Total</span>
+                                <span>${{ cart.get_total_price }}</span>
+                            </div>
+                            <div class="summary-actions">
+                                <a href="{% url 'store:product_list' %}" class="button-secondary">Continue Shopping</a>
+                                <a href="{% url 'orders:order_create' %}" class="button-primary">Proceed to Checkout</a>
+                            </div>
                         </div>
                     </div>
-                    <div class="cart-item-total">${{ item.total_price }}</div>
-                </div>
-                {% endwith %}
-                {% endfor %}
-            </div>
-
-            <div class="cart-summary">
-                <h2>Order Summary</h2>
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span>${{ cart.get_total_price }}</span>
-                </div>
-                <div class="summary-row">
-                    <span>Shipping</span>
-                    <span>Free</span>
-                </div>
-                <div class="summary-total">
-                    <span>Total</span>
-                    <span>${{ cart.get_total_price }}</span>
-                </div>
-                <div class="summary-actions">
-                    <a href="{% url 'store:product_list' %}" class="button-secondary">Continue Shopping</a>
-                    <a href="{% url "orders:order_create" %}" class="button-primary">Proceed to Checkout</a>
-                </div>
+                {% endif %}
             </div>
         </div>
-    {% endif %}
+    </main>
 </div>
 {% endblock %}
