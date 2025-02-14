@@ -2,10 +2,12 @@ import stripe
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from orders.models import Order
 from .tasks import payment_completed
 
 
+@require_POST
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body

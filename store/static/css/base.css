@@ -1,5 +1,6 @@
 /* Reset and Base Styles */
 :root {
+    /* Colors */
     --primary-color: #6366f1;
     --primary-hover: #4f46e5;
     --secondary-color: #ec4899;
@@ -8,11 +9,18 @@
     --background: #ffffff;
     --background-alt: #f8fafc;
     --border-color: #e5e7eb;
+
+    /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+
+    /* Border Radius */
     --radius: 1rem;
     --radius-sm: 0.5rem;
+
+    /* Transitions */
+    --transition: all 0.2s ease;
 }
 
 * {
@@ -36,13 +44,13 @@ body {
 
 /* Header Styles */
 .header {
-    background: var(--background);
+    background: rgba(255, 255, 255, 0.8);
     border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 100;
     backdrop-filter: blur(12px);
-    background-color: rgba(255, 255, 255, 0.8);
+    will-change: backdrop-filter;
 }
 
 .header-content {
@@ -62,7 +70,7 @@ body {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     -webkit-background-clip: text;
     color: transparent;
-    transition: opacity 0.2s;
+    transition: opacity var(--transition);
 }
 
 .logo:hover {
@@ -84,7 +92,7 @@ body {
     background: var(--background);
     border: 2px solid var(--border-color);
     border-radius: var(--radius);
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .cart-button:hover {
@@ -156,7 +164,7 @@ body {
     text-decoration: none;
     color: var(--text-light);
     border-radius: var(--radius-sm);
-    transition: all 0.2s;
+    transition: var(--transition);
     font-weight: 500;
 }
 
@@ -173,7 +181,7 @@ body {
 
 /* Products Grid */
 .products-title {
-    font-size: 2.5rem;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
     margin-bottom: 2.5rem;
     color: var(--text-color);
     font-weight: 700;
@@ -193,8 +201,9 @@ body {
     border-radius: var(--radius);
     overflow: hidden;
     box-shadow: var(--shadow);
-    transition: all 0.3s ease;
+    transition: var(--transition);
     border: 1px solid var(--border-color);
+    will-change: transform;
 }
 
 .product-card:hover {
@@ -235,7 +244,7 @@ body {
 .product-info h3 a {
     text-decoration: none;
     color: var(--text-color);
-    transition: color 0.2s;
+    transition: color var(--transition);
 }
 
 .product-info h3 a:hover {
@@ -259,7 +268,7 @@ body {
     border-radius: var(--radius-sm);
     font-weight: 600;
     text-align: center;
-    transition: all 0.2s;
+    transition: var(--transition);
     border: none;
 }
 
@@ -316,7 +325,7 @@ body {
     text-decoration: none;
     font-weight: 600;
     border-radius: var(--radius-sm);
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .product-category a:hover {
@@ -325,7 +334,7 @@ body {
 }
 
 .product-title {
-    font-size: 3rem;
+    font-size: clamp(2rem, 5vw, 3rem);
     margin-bottom: 1.5rem;
     color: var(--text-color);
     line-height: 1.2;
@@ -359,7 +368,7 @@ body {
     color: var(--text-color);
     font-size: 1rem;
     font-weight: 500;
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .form-group select:focus {
@@ -382,7 +391,7 @@ body {
     font-weight: 600;
     font-size: 1.125rem;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .add-to-cart:hover {
