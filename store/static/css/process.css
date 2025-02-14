@@ -1,32 +1,26 @@
 :root {
     --primary-color: #4f46e5;
     --primary-hover: #4338ca;
+    --secondary-color: #6b7280;
+    --danger-color: #ef4444;
+    --success-color: #10b981;
     --text-primary: #1f2937;
     --text-secondary: #6b7280;
     --background: #ffffff;
     --border-color: #e5e7eb;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --radius: 0.75rem;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: var(--text-primary);
-    line-height: 1.5;
-    background-color: #f9fafb;
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --radius: 1rem;
+    --radius-sm: 0.5rem;
+    --transition: all 0.3s ease;
 }
 
 .wrapper {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: #f9fafb;
 }
 
 .container {
@@ -40,6 +34,92 @@ body {
     padding: 3rem 0;
 }
 
+/* Checkout Progress */
+.checkout-progress {
+    background: var(--background);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.checkout-progress::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--border-color);
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+.progress-step {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--background);
+    padding: 0 1rem;
+}
+
+.step-icon {
+    width: 3rem;
+    height: 3rem;
+    background: var(--background);
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.step-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.step-content {
+    transition: var(--transition);
+}
+
+.step-content h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+}
+
+.step-content p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.progress-step.completed .step-icon {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.progress-step.active .step-icon {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.progress-step.completed .step-content h3,
+.progress-step.active .step-content h3 {
+    color: var(--primary-color);
+}
+
+/* Order Card */
 .order-card {
     background: var(--background);
     padding: 2rem;
@@ -49,13 +129,23 @@ body {
     margin: 0 auto;
 }
 
-h1 {
-    font-size: 1.875rem;
-    font-weight: 700;
-    color: var(--text-primary);
+.order-header {
     margin-bottom: 2rem;
 }
 
+.order-header h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.order-subtitle {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Order Items */
 .order-items {
     border-top: 1px solid var(--border-color);
 }
@@ -72,8 +162,9 @@ h1 {
 .item-image {
     width: 80px;
     height: 80px;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-sm);
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
 .item-image img {
@@ -86,7 +177,7 @@ h1 {
     font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 0.5rem;
+    margin: 0 0 0.5rem 0;
 }
 
 .item-meta {
@@ -96,17 +187,28 @@ h1 {
     font-size: 0.875rem;
 }
 
+.item-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.item-meta svg {
+    opacity: 0.7;
+}
+
 .item-total {
     font-weight: 600;
     color: var(--text-primary);
     font-size: 1.125rem;
 }
 
+/* Order Summary */
 .order-summary {
     margin-top: 2rem;
     padding: 1.5rem;
     background: #f9fafb;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-sm);
 }
 
 .summary-row {
@@ -114,6 +216,21 @@ h1 {
     justify-content: space-between;
     padding: 0.75rem 0;
     color: var(--text-secondary);
+}
+
+.summary-row.discount {
+    color: var(--success-color);
+}
+
+.summary-row.discount span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.shipping-free {
+    color: var(--success-color);
+    font-weight: 500;
 }
 
 .summary-row.total {
@@ -125,6 +242,29 @@ h1 {
     font-size: 1.25rem;
 }
 
+/* Payment Security */
+.payment-security {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-around;
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.security-item svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Payment Form */
 .payment-form {
     margin-top: 2rem;
 }
@@ -139,11 +279,11 @@ h1 {
     color: white;
     padding: 1rem 1.5rem;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-sm);
     font-size: 1.125rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--transition);
 }
 
 .pay-button:hover {
@@ -156,6 +296,7 @@ h1 {
     height: 1.5rem;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
     .main-content {
         padding: 2rem 0;
@@ -165,9 +306,17 @@ h1 {
         padding: 1.5rem;
     }
 
-    h1 {
+    .order-header h1 {
         font-size: 1.5rem;
-        margin-bottom: 1.5rem;
+    }
+
+    .progress-step .step-content {
+        display: none;
+    }
+
+    .checkout-progress {
+        justify-content: space-around;
+        padding: 1.5rem;
     }
 
     .order-item {
@@ -179,6 +328,12 @@ h1 {
         grid-column: 1 / -1;
         text-align: right;
         padding-top: 0.5rem;
+    }
+
+    .payment-security {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
     }
 }
 
@@ -206,5 +361,15 @@ h1 {
 
     .summary-row.total {
         font-size: 1.125rem;
+    }
+
+    .step-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .step-icon svg {
+        width: 1.25rem;
+        height: 1.25rem;
     }
 }

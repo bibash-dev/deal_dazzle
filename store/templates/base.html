@@ -7,16 +7,16 @@
     <meta name="description" content="Deal Dazzle - Your one-stop shop for amazing deals and offers.">
     <title>{% block title %}Deal Dazzle{% endblock %}</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
     <link rel="stylesheet" href="{% static 'css/order_create.css' %}">
     <link rel="stylesheet" href="{% static 'css/process.css' %}">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header Section -->
@@ -24,19 +24,27 @@
         <div class="container header-content">
             <!-- Logo -->
             <a href="/" class="logo" aria-label="Deal Dazzle Home">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon" aria-hidden="true">
-                    <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"></path>
-                    <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"></path>
-                    <path d="M12 3v6"></path>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+                    <path d="M20.91 8.84 8.56 2.23a1.93 1.93 0 0 0-1.81 0L3.1 4.13a2.12 2.12 0 0 0-.05 3.69l12.22 6.93a2 2 0 0 0 1.94 0L21 12.51a2.12 2.12 0 0 0-.09-3.67Z"></path>
+                    <path d="m3.09 8.84 12.35-6.61a1.93 1.93 0 0 1 1.81 0l3.65 1.9a2.12 2.12 0 0 1 .1 3.69L8.73 14.75a2 2 0 0 1-1.94 0L3 12.51a2.12 2.12 0 0 1 .09-3.67Z"></path>
                 </svg>
                 <span>Deal Dazzle</span>
             </a>
+
+            <!-- Navigation -->
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="{% url 'store:product_list' %}" class="nav-link">Shop</a></li>
+                    <li><a href="#" class="nav-link">New Arrivals</a></li>
+                    <li><a href="#" class="nav-link">Sale</a></li>
+                </ul>
+            </nav>
 
             <!-- Cart Widget -->
             <div class="cart-widget">
                 {% with total_items=cart|length %}
                     <a href="{% url 'cart:cart_detail' %}" class="cart-button" aria-label="View Cart">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="8" cy="21" r="1"></circle>
                             <circle cx="19" cy="21" r="1"></circle>
                             <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
@@ -65,8 +73,42 @@
 
     <!-- Footer Section -->
     <footer class="footer" role="contentinfo">
-        <div class="container">
-            <p>&copy; {% now "Y" %} Deal Dazzle. All rights reserved.</p>
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>About Deal Dazzle</h3>
+                <p>Your premier destination for amazing deals and exclusive offers. Shop with confidence and style.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Track Order</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to get special offers and updates.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" aria-label="Email for newsletter">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; {% now "Y" %} Deal Dazzle. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 </body>

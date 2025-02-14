@@ -4,6 +4,7 @@ from django.contrib import messages
 from store.models import Product
 from .cart import Cart
 from .forms import CartAddProductForm
+from coupons.forms import ApplyCouponForm
 
 
 @require_POST
@@ -55,5 +56,6 @@ def cart_detail(request):
                 "override": True,
             }
         )
+    apply_coupon_form = ApplyCouponForm()
 
-    return render(request, "cart_detail.html", {"cart": cart})
+    return render(request, "cart_detail.html", {"cart": cart, "apply_coupon_form": apply_coupon_form})

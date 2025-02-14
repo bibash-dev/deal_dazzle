@@ -5,9 +5,25 @@
 
 {% block content %}
 <div class="product-detail">
+    <div class="breadcrumbs">
+        <a href="{% url 'store:product_list' %}">Home</a>
+        <span>/</span>
+        <a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a>
+        <span>/</span>
+        <span>{{ product.name }}</span>
+    </div>
+
     <div class="product-detail-grid">
-        <div class="product-detail-image">
-            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="{{ product.name }}">
+        <div class="product-gallery">
+            <div class="product-detail-image">
+                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="{{ product.name }}">
+            </div>
+            <div class="product-thumbnails">
+                <button class="thumbnail active">
+                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="{{ product.name }}">
+                </button>
+                <!-- Add more thumbnail buttons if you have multiple images -->
+            </div>
         </div>
 
         <div class="product-detail-info">
@@ -22,16 +38,57 @@
                 {{ product.description|linebreaks }}
             </div>
 
+            <div class="product-features">
+                <div class="feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    <div>
+                        <h4>Premium Quality</h4>
+                        <p>Crafted with the finest materials</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path>
+                    </svg>
+                    <div>
+                        <h4>Satisfaction Guaranteed</h4>
+                        <p>30-day money-back guarantee</p>
+                    </div>
+                </div>
+            </div>
+
             <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-to-cart-form">
                 {% csrf_token %}
-                <div class="form-group">
+                <div class="form-group quantity-selector">
                     {{ cart_product_form }}
                 </div>
                 <button type="submit" class="add-to-cart">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="8" cy="21" r="1"></circle>
+                        <circle cx="19" cy="21" r="1"></circle>
+                        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                    </svg>
                     Add to Cart
                 </button>
             </form>
+
+            <div class="product-meta-info">
+                <div class="meta-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"></path>
+                        <path d="M16.5 9.4 7.55 4.24"></path>
+                    </svg>
+                    <span>SKU: {{ product.id }}</span>
+                </div>
+                <div class="meta-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                    </svg>
+                    <span>Category: <a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

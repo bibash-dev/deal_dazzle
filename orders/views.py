@@ -20,9 +20,14 @@ def order_create(request):
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
         if form.is_valid():
+            print("Form is valid")
             try:
                 with transaction.atomic():
-                    order = form.save()
+                    order = form.save(commit=False)
+                    if cart.coupon:
+                        order.coupon = cart.coupon
+                        order.discount = cart.coupon.discount
+                    order.save()
                     # Create orders items from the cart
                     for item in cart:
                         OrderItem.objects.create(
@@ -40,6 +45,7 @@ def order_create(request):
                     return redirect("payment:process")
 
             except Exception as e:
+                print(f"Exception occurred: {str(e)}")
                 messages.error(request, "An error occurred while processing your orders. Please try again.")
                 return redirect("cart:cart_detail")
 

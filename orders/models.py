@@ -1,11 +1,14 @@
 from django.conf import settings
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.urls import reverse
+from decimal import Decimal
+from coupons.models import Coupon
 
 
 class Order(models.Model):
     """
-    Represents an orders made by a customer.
+    Represents an order made by a customer.
     """
     first_name = models.CharField(
         max_length=50,
@@ -32,7 +35,8 @@ class Order(models.Model):
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
-        verbose_name='Created At'
+        verbose_name='Created At',
+        db_index=True
     )
     updated_at = models.DateTimeField(
         auto_now=True,
@@ -40,18 +44,33 @@ class Order(models.Model):
     )
     paid = models.BooleanField(
         default=False,
-        verbose_name='Paid'
+        verbose_name='Paid',
+        db_index=True
     )
     stripe_id = models.CharField(
         max_length=250,
         blank=True,
-        verbose_name='Stripe Id'
+        verbose_name='Stripe ID'
+    )
+    coupon = models.ForeignKey(
+        Coupon,
+        related_name='orders',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name='Coupon'
+    )
+    discount = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        verbose_name='Discount (%)'
     )
 
     class Meta:
         ordering = ['-created_at']
         indexes = [
             models.Index(fields=['-created_at']),
+            models.Index(fields=['paid']),
         ]
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
@@ -62,22 +81,40 @@ class Order(models.Model):
     def __repr__(self):
         return f'<Order id={self.id}, paid={self.paid}, total_cost={self.get_total_cost()}>'
 
-    def get_total_cost(self):
+    def get_total_cost_before_discount(self):
+        """Calculate total cost before any discounts are applied."""
         return sum(item.get_cost() for item in self.items.all())
 
+    def get_discount(self):
+        """Calculate the discount amount based on the percentage."""
+        total_cost = self.get_total_cost_before_discount()
+        if self.discount:
+            return total_cost * (self.discount / Decimal(100))
+        return Decimal(0)
+
+    def get_total_cost(self):
+        """Calculate the final cost after applying any discount."""
+        total_cost = self.get_total_cost_before_discount()
+        return total_cost - self.get_discount()
+
     def get_stripe_url(self):
+        """Generate Stripe dashboard URL for this payment."""
         if not self.stripe_id:
             return ''
-
-        environment_path = '/test/' if '_test_' in settings.STRIPE_SECRET_KEY else '/'
+        if '_test_' in settings.STRIPE_SECRET_KEY:
+            environment_path = '/test/'
+        else:
+            environment_path = '/'
         return f'https://dashboard.stripe.com{environment_path}payments/{self.stripe_id}'
 
-
+    def get_absolute_url(self):
+        """Get URL for viewing a particular order."""
+        return reverse('orders:order_detail', args=[self.id])
 
 
 class OrderItem(models.Model):
     """
-    Represents an item within an orders.
+    Represents an item within an order.
     """
     order = models.ForeignKey(
         Order,
@@ -95,7 +132,7 @@ class OrderItem(models.Model):
         max_digits=10,
         decimal_places=2,
         verbose_name='Price',
-        validators=[MinValueValidator(0)]
+        validators=[MinValueValidator(Decimal('0.01'))]
     )
     quantity = models.PositiveIntegerField(
         default=1,
@@ -106,12 +143,17 @@ class OrderItem(models.Model):
     class Meta:
         verbose_name = 'Order Item'
         verbose_name_plural = 'Order Items'
+        indexes = [
+            models.Index(fields=['order']),
+            models.Index(fields=['product']),
+        ]
 
     def __str__(self):
-        return f'OrderItem {self.id} (Order {self.order.id})'
+        return f'{self.quantity}x {self.product.name} in Order #{self.order.id}'
 
     def __repr__(self):
-        return f'<OrderItem id={self.id}, product={self.product.name}, quantity={self.quantity}, cost={self.get_cost()}>'
+        return f'<OrderItem id={self.id}, product="{self.product.name}", quantity={self.quantity}, cost={self.get_cost()}>'
 
     def get_cost(self):
+        """Calculate the cost of this order item."""
         return self.price * self.quantity

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-$l(dm!^)xc@&n)jecxj%pswqw8tq!d(9i$+6_)g$)(x44o%+xa
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'store.apps.StoreConfig',
     'payment.apps.PaymentConfig',
     'cart.apps.CartConfig',
-    'orders.apps.OrdersConfig'
+    'orders.apps.OrdersConfig',
+    'coupons.apps.CouponsConfig',
 ]
 
 MIDDLEWARE = [
@@ -140,8 +141,3 @@ STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 STRIPE_API_VERSION = "2025-01-27.acacia"
 STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET')
-
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://8a0b-27-34-65-74.ngrok-free.app',
-]

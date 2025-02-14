@@ -2,44 +2,99 @@
 {% load static %}
 
 {% block title %}
-    {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% if category %}{{ category.name }}{% else %}Products{% endif %}
 {% endblock %}
 
 {% block content %}
-    <div class="shop-container">
-        <aside class="sidebar">
-            <div class="categories-widget">
-                <h3>Categories</h3>
-                <ul class="categories-list">
-                    <li {% if not category %}class="selected"{% endif %}>
-                        <a href="{% url 'store:product_list' %}">All Products</a>
-                    </li>
-                    {% for c in categories %}
-                        <li {% if category.slug == c.slug %}class="selected"{% endif %}>
-                            <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </aside>
-
-        <div class="products-container">
-            <h1 class="products-title">{% if category %}{{ category.name }}{% else %}All Products{% endif %}</h1>
-
-            <div class="product-grid">
-                {% for product in products %}
-                    <article class="product-card">
-                        <a href="{{ product.get_absolute_url }}" class="product-image">
-                            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="{{ product.name }}">
-                        </a>
-                        <div class="product-info">
-                            <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
-                            <p class="product-price">${{ product.price }}</p>
-                            <a href="{{ product.get_absolute_url }}" class="view-product">View Details</a>
-                        </div>
-                    </article>
+<div class="shop-container">
+    <aside class="sidebar">
+        <div class="categories-widget">
+            <h3>Categories</h3>
+            <ul class="categories-list">
+                <li {% if not category %}class="selected"{% endif %}>
+                    <a href="{% url 'store:product_list' %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+                            <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+                            <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+                            <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+                        </svg>
+                        <span>All Products</span>
+                    </a>
+                </li>
+                {% for c in categories %}
+                <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+                    <a href="{{ c.get_absolute_url }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 20h16"></path>
+                            <path d="m6 16 6-12 6 12"></path>
+                            <path d="M8 12h8"></path>
+                        </svg>
+                        <span>{{ c.name }}</span>
+                    </a>
+                </li>
                 {% endfor %}
+            </ul>
+        </div>
+
+        <div class="filter-widget">
+            <h3>Filters</h3>
+            <div class="filter-section">
+                <h4>Price Range</h4>
+                <div class="price-inputs">
+                    <input type="number" placeholder="Min" aria-label="Minimum price">
+                    <span>-</span>
+                    <input type="number" placeholder="Max" aria-label="Maximum price">
+                </div>
+            </div>
+            <div class="filter-section">
+                <h4>Sort By</h4>
+                <select aria-label="Sort products">
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="popular">Most Popular</option>
+                </select>
             </div>
         </div>
+    </aside>
+
+    <div class="products-container">
+        <div class="products-header">
+            <h1 class="products-title">{% if category %}{{ category.name }}{% else %}All Products{% endif %}</h1>
+            <p class="products-count">Showing {{ products|length }} products</p>
+        </div>
+
+        <div class="product-grid">
+            {% for product in products %}
+            <article class="product-card">
+                <div class="product-card-inner">
+                    <a href="{{ product.get_absolute_url }}" class="product-image">
+                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="{{ product.name }}">
+                        <div class="product-overlay">
+                            <span class="view-details">View Details</span>
+                        </div>
+                    </a>
+                    <div class="product-info">
+                        <div class="product-category-tag">
+                            <a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a>
+                        </div>
+                        <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+                        <div class="product-meta">
+                            <p class="product-price">${{ product.price }}</p>
+                            <button class="quick-add" aria-label="Quick add to cart">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                                    <path d="M3 6h18"></path>
+                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
     </div>
+</div>
 {% endblock %}
