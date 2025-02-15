@@ -1,6 +1,6 @@
 # Deal Dazzle - Online Store
 
-Deal Dazzle is a Django powered online store built with Django. It provides a seamless shopping experience for customers, allowing them to browse products, add items to their cart, apply discount codes, complete the checkout process, and pay securely using a credit card. The project also includes a recommendation engine to suggest products to customers, enhancing their shopping experience.
+Deal Dazzle is a Django powered online store. It provides a seamless shopping experience for customers, allowing them to browse products, add items to their cart, apply discount codes, complete the checkout process, and pay securely using a credit card. The project also includes a recommendation engine to suggest products to customers, enhancing their shopping experience.
 
 ## Features
 
