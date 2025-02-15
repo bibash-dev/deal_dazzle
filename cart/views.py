@@ -5,6 +5,7 @@ from store.models import Product
 from .cart import Cart
 from .forms import CartAddProductForm
 from coupons.forms import ApplyCouponForm
+from store.product_recommender import ProductRecommender
 
 
 @require_POST
@@ -58,4 +59,9 @@ def cart_detail(request):
         )
     apply_coupon_form = ApplyCouponForm()
 
-    return render(request, "cart_detail.html", {"cart": cart, "apply_coupon_form": apply_coupon_form})
+    recommender = ProductRecommender()
+    cart_products = [item['product'] for item in cart] if cart else []
+    recommended_products = recommender.fetch_recommended_products(cart_products, 4) if cart_products else []
+
+    return render(request, "cart_detail.html",
+                  {"cart": cart, "apply_coupon_form": apply_coupon_form, "recommended_products": recommended_products})

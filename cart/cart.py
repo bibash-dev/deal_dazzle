@@ -1,5 +1,6 @@
-from decimal import Decimal
 from django.conf import settings
+from django.core.cache import cache
+from decimal import Decimal
 from store.models import Product
 from coupons.models import Coupon
 
@@ -107,15 +108,22 @@ class Cart:
         """
         return sum(Decimal(item["price"]) * item["quantity"] for item in self.cart.values())
 
-
     @property
     def coupon(self):
-        if self.coupon_id:
-            try:
-                return Coupon.objects.get(id=self.coupon_id)
-            except Coupon.DoesNotExist:
-                pass
-        return None
+        """ Property to retrieve the associated coupon for the cart. """
+        if not hasattr(self, '_cached_coupon'):
+            if self.coupon_id:
+                cache_key = f'coupon_{self.coupon_id}'
+                self._cached_coupon = cache.get(cache_key)
+                if not self._cached_coupon:
+                    try:
+                        self._cached_coupon = Coupon.objects.get(id=self.coupon_id)
+                        cache.set(cache_key, self._cached_coupon, timeout=300)  # Cache for 5 minutes
+                    except Coupon.DoesNotExist:
+                        self._cached_coupon = None
+            else:
+                self._cached_coupon = None
+        return self._cached_coupon
 
     def get_discount(self):
         if self.coupon:

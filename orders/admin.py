@@ -41,6 +41,8 @@ def export_to_csv(modeladmin, request, queryset):
             data_row.append(str(value))
         writer.writerow(data_row)
 
+    # Add a confirmation message
+    modeladmin.message_user(request, f"Exported {queryset.count()} {opts.verbose_name_plural} to CSV.")
     return response
 
 
@@ -114,5 +116,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     actions = [export_to_csv]
     list_select_related = True
-    search_fields = ['first_name', 'last_name', 'email']
+    search_fields = ['first_name', 'last_name', 'email', 'address', 'postal_code', 'city']
     date_hierarchy = 'created_at'
+    ordering = ['-created_at']
+    readonly_fields = ['created_at', 'updated_at']

@@ -9,30 +9,36 @@
         <div class="container">
             <div class="cart-page">
                 <div class="cart-header">
-                    <h1 class="cart-title">Shopping Cart</h1>
+                    <h1 class="cart-title">Your Shopping Cart</h1>
                     <div class="cart-count" aria-live="polite">
-                        {% if cart|length == 1 %}1 item{% else %}{{ cart|length }} items{% endif %}
+                        {% if cart|length == 1 %}
+                            <span class="count">1</span> item
+                        {% else %}
+                            <span class="count">{{ cart|length }}</span> items
+                        {% endif %}
                     </div>
                 </div>
 
                 {% if cart|length == 0 %}
                     <div class="empty-cart" role="status">
-                        <div class="empty-cart-icon" aria-hidden="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="8" cy="21" r="1"></circle>
-                                <circle cx="19" cy="21" r="1"></circle>
-                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
-                            </svg>
+                        <div class="empty-cart-content">
+                            <div class="empty-cart-icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="8" cy="21" r="1"></circle>
+                                    <circle cx="19" cy="21" r="1"></circle>
+                                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                                </svg>
+                            </div>
+                            <p class="empty-cart-message">Your shopping cart is empty</p>
+                            <p class="empty-cart-submessage">Looks like you haven't added anything to your cart yet</p>
+                            <a href="{% url 'store:product_list' %}" class="button-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                                Start Shopping
+                            </a>
                         </div>
-                        <p class="empty-cart-message">Your shopping cart is empty</p>
-                        <p class="empty-cart-submessage">Looks like you haven't added anything to your cart yet</p>
-                        <a href="{% url 'store:product_list' %}" class="button-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                            </svg>
-                            Continue Shopping
-                        </a>
                     </div>
                 {% else %}
                     <div class="cart-grid">
@@ -55,16 +61,27 @@
                                         <div class="cart-item-meta">
                                             <span class="cart-item-price">${{ item.price }}</span>
                                             {% if product.stock > 0 %}
-                                                <span class="stock-status in-stock" role="status">In Stock</span>
+                                                <span class="stock-status in-stock" role="status">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M20 6L9 17l-5-5"></path>
+                                                    </svg>
+                                                    In Stock
+                                                </span>
                                             {% else %}
-                                                <span class="stock-status out-of-stock" role="status">Out of Stock</span>
+                                                <span class="stock-status out-of-stock" role="status">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                    Out of Stock
+                                                </span>
                                             {% endif %}
                                         </div>
                                     </div>
                                     <div class="cart-item-actions">
                                         <form action="{% url 'cart:cart_add' product.id %}" method="post" class="quantity-form">
                                             <div class="quantity-wrapper">
-                                                <label for="quantity-{{ product.id }}" class="quantity-label">Quantity:</label>
+                                                <label for="quantity-{{ product.id }}" class="quantity-label">Quantity</label>
                                                 {{ item.update_quantity_form.quantity }}
                                                 {{ item.update_quantity_form.override }}
                                             </div>
@@ -93,7 +110,7 @@
                                     </div>
                                 </div>
                                 <div class="cart-item-total">
-                                    <span class="total-label">Total:</span>
+                                    <span class="total-label">Total</span>
                                     <span class="total-amount">${{ item.total_price }}</span>
                                 </div>
                             </article>
@@ -117,10 +134,10 @@
                                         </svg>
                                         "{{ cart.coupon.code }}" ({{ cart.coupon.discount }}% off)
                                     </span>
-                                    <span class="discount-amount">- ${{ cart.get_discount|floatformat:2 }}</span>
+                                    <span class="discount-amount">-${{ cart.get_discount|floatformat:2 }}</span>
                                 </div>
                                 {% endif %}
-                                <div class="summary-row">
+                                <div class="summary-row shipping">
                                     <span>Shipping</span>
                                     <span class="shipping-free">Free</span>
                                 </div>
@@ -163,6 +180,27 @@
                             </div>
                         </aside>
                     </div>
+
+                    {% if recommended_products %}
+                    <section class="recommendations">
+                        <h3>Recommended for You</h3>
+                        <div class="recommendations-grid">
+                            {% for product in recommended_products %}
+                            <article class="recommendation-item">
+                                <a href="{{ product.get_absolute_url }}" class="recommendation-image">
+                                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'image/default_image.png' %}{% endif %}"
+                                         alt="{{ product.name }}"
+                                         loading="lazy">
+                                </a>
+                                <div class="recommendation-info">
+                                    <h4><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h4>
+                                    <span class="recommendation-price">${{ product.price }}</span>
+                                </div>
+                            </article>
+                            {% endfor %}
+                        </div>
+                    </section>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>

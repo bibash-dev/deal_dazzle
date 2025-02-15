@@ -91,5 +91,23 @@
             </div>
         </div>
     </div>
+
+    {% if recommended_products %}
+    <div class="recommendations">
+        <h3>People who bought this also bought</h3>
+        <div class="recommendations-grid">
+            {% for product in recommended_products %}
+            <div class="recommendation-item">
+                <a href="{{ product.get_absolute_url }}">
+                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="{{ product.name }}">
+                </a>
+                <div class="recommendation-info">
+                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

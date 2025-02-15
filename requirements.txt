@@ -5,3 +5,4 @@ flower
 stripe
 python-decouple
 weasyprint
+redis

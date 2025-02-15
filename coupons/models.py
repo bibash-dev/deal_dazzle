@@ -24,15 +24,9 @@ class Coupon(models.Model):
         return self.code
 
     def clean(self):
-        """
-        Custom validation to ensure valid_from is before valid_to.
-        """
         if self.valid_from and self.valid_to and self.valid_from >= self.valid_to:
             raise ValidationError({"valid_to": "Valid To must be after Valid From."})
 
     def is_valid(self):
-        """
-        Check if the coupon is currently valid based on the current time.
-        """
         now = timezone.now()
         return self.active and self.valid_from <= now <= self.valid_to
