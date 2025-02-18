@@ -8,63 +8,65 @@ from django.template.loader import render_to_string
 from cart.cart import Cart
 from .forms import OrderCreateForm
 from .models import Order, OrderItem
-from .tasks import order_created
+from .tasks import order_created_email
 
 
 def order_create(request):
     """
-    View to handle orders creation.
+    View to handle order creation.
     """
     cart = Cart(request)
 
-    if request.method == 'POST':
-        form = OrderCreateForm(request.POST)
-        if form.is_valid():
-            print("Form is valid")
-            try:
-                with transaction.atomic():
-                    order = form.save(commit=False)
-                    if cart.coupon:
-                        order.coupon = cart.coupon
-                        order.discount = cart.coupon.discount
-                    order.save()
-                    # Create orders items from the cart
-                    for item in cart:
-                        OrderItem.objects.create(
-                            order=order,
-                            product=item['product'],
-                            price=item['price'],
-                            quantity=item['quantity'],
-                        )
-                    cart.clear()
-                    # Launch the asynchronous task to send an orders confirmation email
-                    order_created.delay(order.id)
-                    # Store the orders ID in the session for payment processing
-                    request.session['order_id'] = order.id
-
-                    return redirect("payment:process")
-
-            except Exception as e:
-                print(f"Exception occurred: {str(e)}")
-                messages.error(request, "An error occurred while processing your orders. Please try again.")
-                return redirect("cart:cart_detail")
-
-    else:
-        # If it's a GET request, initialize an empty form
+    if request.method != 'POST':
         form = OrderCreateForm()
+        return render(request, 'order_create.html', {'cart': cart, 'form': form})
 
-    # Render the orders creation page
-    return render(
-        request,
-        'order_create.html',
-        {'cart': cart, 'form': form},
-    )
+    # Handle POST request
+    form = OrderCreateForm(request.POST)
+    if not form.is_valid():
+        messages.error(request, "Invalid form data. Please check your input.")
+        return render(request, 'order_create.html', {'cart': cart, 'form': form})
+
+    try:
+        with transaction.atomic():
+            order = form.save(commit=False)
+            if cart.coupon:
+                order.coupon = cart.coupon
+                order.discount = cart.coupon.discount
+            order.save()
+
+            # Create order items from the cart
+            order_items = [
+                OrderItem(
+                    order=order,
+                    product=item['product'],
+                    price=item['price'],
+                    quantity=item['quantity'],
+                )
+                for item in cart
+            ]
+            OrderItem.objects.bulk_create(order_items)
+
+            cart.clear()
+
+            # Launch the asynchronous task to send an order confirmation email
+            order_created_email.delay(order.id)
+
+            # Store the order ID in the session for payment processing
+            request.session['order_id'] = order.id
+
+            return redirect("payment:process")
+
+    except Exception as e:
+        print(f"Exception occurred: {str(e)}")
+        messages.error(request, "An error occurred while processing your order. Please try again.")
+        return redirect("cart:cart_detail")
 
 
 @staff_member_required
 def admin_order_detail(request, order_id):
     """
-    View to display the details of a specific orders in the admin interface.
+    Display the details of a specific orders in the admin interface.
     Only accessible by staff members.
     """
     order = get_object_or_404(Order, id=order_id)
@@ -84,7 +86,6 @@ def admin_order_pdf(request, order_id):
 
     # Render the HTML template with the order context
     html = render_to_string('admin/orders/order/pdf.html', {'order': order})
-
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'filename=order_{order.id}.pdf'
 

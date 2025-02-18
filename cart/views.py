@@ -8,6 +8,7 @@ from coupons.forms import ApplyCouponForm
 from store.product_recommender import ProductRecommender
 
 
+
 @require_POST
 def cart_add(request, product_id):
     """
@@ -19,15 +20,17 @@ def cart_add(request, product_id):
 
     if form.is_valid():
         cleaned_data = form.cleaned_data
+        quantity = cleaned_data["quantity"]
+        override = cleaned_data["override"]
+
+        # Add or update the product in the cart
         cart.add(
             product=product,
-            quantity=cleaned_data["quantity"],
-            override_quantity=cleaned_data["override"],
+            quantity=quantity,
+            override=override,
         )
-        messages.success(request, f"{product.name} has been added to your cart.")
-    else:
-        messages.error(request, "Invalid form submission. Please try again.")
 
+    # Redirect to the cart detail page
     return redirect("cart:cart_detail")
 
 
@@ -54,9 +57,11 @@ def cart_detail(request):
         item["update_quantity_form"] = CartAddProductForm(
             initial={
                 "quantity": item["quantity"],
-                "override": True,
+                "override": True
             }
         )
+
+    shipping_cost = cart.get_shipping_cost()
     apply_coupon_form = ApplyCouponForm()
 
     recommender = ProductRecommender()
@@ -64,4 +69,4 @@ def cart_detail(request):
     recommended_products = recommender.fetch_recommended_products(cart_products, 4) if cart_products else []
 
     return render(request, "cart_detail.html",
-                  {"cart": cart, "apply_coupon_form": apply_coupon_form, "recommended_products": recommended_products})
+                  {"cart": cart, "apply_coupon_form": apply_coupon_form, "recommended_products": recommended_products, "shipping_cost": shipping_cost})

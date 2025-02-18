@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.cache import cache
 from decimal import Decimal
 from store.models import Product
 from coupons.models import Coupon
@@ -16,10 +15,10 @@ class Cart:
         if not cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
-        # store current applied coupon
+        # Store current applied coupon
         self.coupon_id = self.session.get('coupon_id')
 
-    def add(self, product, quantity=1, override_quantity=False):
+    def add(self, product, quantity=1, override=False):
         """
         Add a product to the cart or update its quantity.
         If override_quantity is True, set the quantity directly.
@@ -33,7 +32,7 @@ class Cart:
                 "name": product.name,
             }
 
-        if override_quantity:
+        if override:
             self.cart[product_id]["quantity"] = quantity
         else:
             self.cart[product_id]["quantity"] += quantity
@@ -48,23 +47,6 @@ class Cart:
         if product_id in self.cart:
             del self.cart[product_id]
             self.save()
-
-    def update(self, product, quantity):
-        """
-        Update the quantity of a specific product in the cart.
-        If the quantity is 0 or less, the product is removed.
-        """
-        if quantity <= 0:
-            self.remove(product)
-        else:
-            self.add(product, quantity, override_quantity=True)
-
-    def contains(self, product):
-        """
-        Check if a specific product is in the cart.
-        """
-        product_id = str(product.id)
-        return product_id in self.cart
 
     def clear(self):
         """
@@ -102,6 +84,26 @@ class Cart:
         """
         return sum(item["quantity"] for item in self.cart.values())
 
+    def get_total_weight(self):
+        """Calculate the total weight of all items in the cart."""
+        total_weight = Decimal('0')
+        for item in self.cart.values():
+            product = item['product']
+            quantity = item['quantity']
+            total_weight += product.weight * quantity
+        return total_weight
+
+    def get_shipping_cost(self):
+        """Calculate the shipping cost based on the total weight."""
+        total_weight = self.get_total_weight()
+        # Shipping cost logic here: $5 for the first 500g, $1 for each additional 100g
+        if total_weight <= 500:
+            return Decimal('5.00')
+        else:
+            additional_weight = total_weight - 500
+            additional_cost = (additional_weight // 100) * Decimal('1.00')
+            return Decimal('5.00') + additional_cost
+
     def get_total_price(self):
         """
         Calculate and return the total price of all items in the cart.
@@ -110,20 +112,12 @@ class Cart:
 
     @property
     def coupon(self):
-        """ Property to retrieve the associated coupon for the cart. """
-        if not hasattr(self, '_cached_coupon'):
-            if self.coupon_id:
-                cache_key = f'coupon_{self.coupon_id}'
-                self._cached_coupon = cache.get(cache_key)
-                if not self._cached_coupon:
-                    try:
-                        self._cached_coupon = Coupon.objects.get(id=self.coupon_id)
-                        cache.set(cache_key, self._cached_coupon, timeout=300)  # Cache for 5 minutes
-                    except Coupon.DoesNotExist:
-                        self._cached_coupon = None
-            else:
-                self._cached_coupon = None
-        return self._cached_coupon
+        if self.coupon_id:
+            try:
+                return Coupon.objects.get(id=self.coupon_id)
+            except Coupon.DoesNotExist:
+                pass
+        return None
 
     def get_discount(self):
         if self.coupon:
@@ -134,3 +128,6 @@ class Cart:
 
     def get_total_price_after_discount(self):
         return self.get_total_price() - self.get_discount()
+
+    def get_total_price_after_discount_and_shipping_cost(self):
+        return self.get_total_price_after_discount() + self.get_shipping_cost()

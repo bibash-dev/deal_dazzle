@@ -9,7 +9,7 @@
 <div class="shop-container">
     <aside class="sidebar">
         <div class="categories-widget">
-            <h3>Categories</h3>
+            <h3>Browse Categories</h3>
             <ul class="categories-list">
                 <li {% if not category %}class="selected"{% endif %}>
                     <a href="{% url 'store:product_list' %}">
@@ -37,42 +37,59 @@
             </ul>
         </div>
 
-        <div class="filter-widget">
-            <h3>Filters</h3>
+        <form method="get" action="." class="filter-widget" hx-get="." hx-target="#product-grid" hx-swap="innerHTML" hx-trigger="change from:input, change from:select" hx-push-url="true">
+            <h3>Refine Search</h3>
             <div class="filter-section">
                 <h4>Price Range</h4>
-                <div class="price-inputs">
-                    <input type="number" placeholder="Min" aria-label="Minimum price">
-                    <span>-</span>
-                    <input type="number" placeholder="Max" aria-label="Maximum price">
+                <div class="price-slider">
+                    <p class="price-range">${{ price_range.min_price }} - ${{ price_range.max_price }}</p>
+                    <div class="price-inputs">
+                        <div class="price-input-group">
+                            <label for="min-price">Min</label>
+                            <input type="number" id="min-price" name="min_price" value="{{ min_price }}" aria-label="Minimum price">
+                        </div>
+                        <div class="price-input-group">
+                            <label for="max-price">Max</label>
+                            <input type="number" id="max-price" name="max_price" value="{{ max_price }}" aria-label="Maximum price">
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="filter-section">
-                <h4>Sort By</h4>
-                <select aria-label="Sort products">
-                    <option value="newest">Newest First</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="popular">Most Popular</option>
+                <h4>Sort Products</h4>
+                <select name="sort_by" aria-label="Sort products" class="sort-select">
+                    <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest Arrivals</option>
+                    <option value="price-low" {% if sort_by == "price-low" %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price-high" {% if sort_by == "price-high" %}selected{% endif %}>Price: High to Low</option>
                 </select>
             </div>
-        </div>
+        </form>
     </aside>
 
-    <div class="products-container">
-        <div class="products-header">
-            <h1 class="products-title">{% if category %}{{ category.name }}{% else %}All Products{% endif %}</h1>
-            <p class="products-count">Showing {{ products|length }} products</p>
-        </div>
+    <main class="products-container">
+        <header class="products-header">
+            <div class="header-content">
+                <h1 class="products-title">{% if category %}{{ category.name }}{% else %}All Products{% endif %}</h1>
+                <p class="products-count">Showing <span id="product-count">{{ products|length }}</span> products</p>
+            </div>
+        </header>
 
-        <div class="product-grid">
+        <div class="product-grid" id="product-grid">
             {% for product in products %}
             <article class="product-card">
                 <div class="product-card-inner">
                     <a href="{{ product.get_absolute_url }}" class="product-image">
-                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="{{ product.name }}">
+                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
+                             alt="{{ product.name }}"
+                             loading="lazy">
                         <div class="product-overlay">
-                            <span class="view-details">View Details</span>
+                            <span class="view-details">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.3-4.3"></path>
+                                </svg>
+                                View Details
+                            </span>
                         </div>
                     </a>
                     <div class="product-info">
@@ -82,7 +99,7 @@
                         <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
                         <div class="product-meta">
                             <p class="product-price">${{ product.price }}</p>
-                            <button class="quick-add" aria-label="Quick add to cart">
+                            <button aria-label="Add {{ product.name }} to cart" class="quick-add">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
                                     <path d="M3 6h18"></path>
@@ -95,6 +112,6 @@
             </article>
             {% endfor %}
         </div>
-    </div>
+    </main>
 </div>
 {% endblock %}

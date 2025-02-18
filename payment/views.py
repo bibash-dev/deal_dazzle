@@ -4,6 +4,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib import messages
+
 from orders.models import Order
 
 # Stripe configuration
@@ -39,6 +40,19 @@ def payment_process(request):
                 },
                 'quantity': item.quantity,
             })
+
+        # Add shipping cost
+        shipping_cost = order.get_shipping_cost()
+        line_items.append({
+            'price_data': {
+                'currency': 'usd',
+                'product_data': {
+                    'name': 'Shipping',
+                },
+                'unit_amount': int(shipping_cost * Decimal('100')),
+            },
+            'quantity': 1,
+        })
 
         session_data = {
             'mode': 'payment',
@@ -76,17 +90,12 @@ def payment_process(request):
 
 
 def payment_completed(request):
-    """
-    View to render the payment completed page.
-    """
     # Clear the order_id from the session to prevent reuse
     if 'order_id' in request.session:
         del request.session['order_id']
+
     return render(request, 'payment/completed.html')
 
 
 def payment_canceled(request):
-    """
-    View to render the payment canceled page.
-    """
     return render(request, 'payment/canceled.html')

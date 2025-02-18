@@ -6,8 +6,9 @@ from smtplib import SMTPException
 from .models import Order
 
 
-@shared_task(name="orders.tasks.order_created", autoretry_for=(SMTPException,), retry_kwargs={'max_retries': 3}, retry_backoff=True)
-def order_created(order_id):
+@shared_task(name="orders.tasks.order_created", autoretry_for=(SMTPException,), retry_kwargs={'max_retries': 3},
+             retry_backoff=True)
+def order_created_email(order_id):
     """
     Task to send an e-mail notification when an order is successfully created.
     """
@@ -15,7 +16,11 @@ def order_created(order_id):
         order = Order.objects.get(id=order_id)
 
         subject = f'Order number: {order.id}'
-        message = f'Dear {order.first_name},\n\nYou have successfully placed an order.\n\nYour order ID is {order.id}.'
+        message = (
+            f'Dear {order.first_name},\n\n'
+            f'You have successfully placed an order.\n\n'
+            f'Your order ID is {order.id}.'
+        )
         from_email = settings.DEFAULT_FROM_EMAIL
         recipient_list = [order.email]
 

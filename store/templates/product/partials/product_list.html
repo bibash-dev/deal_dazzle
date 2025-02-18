@@ -1,0 +1,29 @@
+{% load static %}
+{% for product in products %}
+<article class="product-card">
+    <div class="product-card-inner">
+        <a href="{{ product.get_absolute_url }}" class="product-image">
+            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="{{ product.name }}">
+            <div class="product-overlay">
+                <span class="view-details">View Details</span>
+            </div>
+        </a>
+        <div class="product-info">
+            <div class="product-category-tag">
+                <a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a>
+            </div>
+            <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+            <div class="product-meta">
+                <p class="product-price">${{ product.price }}</p>
+                <button aria-label="Quick add to cart" class="quick-add">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                        <path d="M3 6h18"></path>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</article>
+{% endfor %}

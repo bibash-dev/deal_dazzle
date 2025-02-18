@@ -7,7 +7,7 @@ from orders.models import Order
 
 
 @shared_task
-def payment_completed(order_id):
+def payment_completed_email(order_id):
     """
     Task to send an e-mail notification with an invoice when an order is successfully paid.
     """

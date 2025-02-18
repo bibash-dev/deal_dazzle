@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block title %}Secure Checkout • Deal Dazzle{% endblock %}
 
 {% block content %}
@@ -153,11 +152,11 @@
                         {% endif %}
                         <div class="total-row">
                             <span>Shipping</span>
-                            <span class="shipping-free">Free</span>
+                            <span class="shipping-free">+${{ cart.get_shipping_cost|floatformat:2 }}</span>
                         </div>
                         <div class="total-row grand-total">
                             <span>Total</span>
-                            <span>${{ cart.get_total_price_after_discount|floatformat:2 }}</span>
+                            <span>${{ cart.get_total_price_after_discount_and_shipping_cost|floatformat:2 }}</span>
                         </div>
                     </div>
 

@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from orders.models import Order
-from .tasks import payment_completed
+from .tasks import payment_completed_email
 from store.models import Product
 from store.product_recommender import ProductRecommender
 
@@ -62,6 +62,6 @@ def handle_successful_payment(session):
     recommender.products_bought_together(products)
 
     # Launch asynchronous task to handle post-payment actions
-    payment_completed.delay(order.id)
+    payment_completed_email.delay(order.id)
 
     return HttpResponse(status=200)

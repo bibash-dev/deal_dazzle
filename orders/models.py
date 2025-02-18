@@ -82,20 +82,36 @@ class Order(models.Model):
         return f'<Order id={self.id}, paid={self.paid}, total_cost={self.get_total_cost()}>'
 
     def get_total_cost_before_discount(self):
-        """Calculate total cost before any discounts are applied."""
         return sum(item.get_cost() for item in self.items.all())
 
     def get_discount(self):
-        """Calculate the discount amount based on the percentage."""
         total_cost = self.get_total_cost_before_discount()
         if self.discount:
             return total_cost * (self.discount / Decimal(100))
         return Decimal(0)
 
     def get_total_cost(self):
-        """Calculate the final cost after applying any discount."""
         total_cost = self.get_total_cost_before_discount()
         return total_cost - self.get_discount()
+
+    def get_total_weight(self):
+        return sum(item.product.weight * item.quantity for item in self.items.all())
+
+    def get_shipping_cost(self):
+        total_weight = self.get_total_weight()
+        # Shipping cost logic: $5 for the first 500g, $1 for each additional 100g
+        if total_weight <= 500:
+            return Decimal('5.00')
+        else:
+            additional_weight = total_weight - 500
+            additional_cost = (additional_weight // 100) * Decimal('1.00')
+            return Decimal('5.00') + additional_cost
+
+    def get_total_cost_with_shipping_cost(self):
+        total_cost = self.get_total_cost_before_discount()
+        total_cost -= self.get_discount()
+        total_cost += self.get_shipping_cost()
+        return total_cost
 
     def get_stripe_url(self):
         """Generate Stripe dashboard URL for this payment."""
@@ -155,5 +171,4 @@ class OrderItem(models.Model):
         return f'<OrderItem id={self.id}, product="{self.product.name}", quantity={self.quantity}, cost={self.get_cost()}>'
 
     def get_cost(self):
-        """Calculate the cost of this order item."""
         return self.price * self.quantity

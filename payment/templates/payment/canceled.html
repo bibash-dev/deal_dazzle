@@ -1,6 +1,29 @@
- {% extends "shop/base.html" %}
- {% block title %}Payment canceled{% endblock %}
- {% block content %}
-  <h1>Your payment has not been processed</h1>
-  <p>There was a problem processing your payment.</p>
- {% endblock %}
+{% extends "base.html" %}
+{% block title %}Payment canceled{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="payment-canceled">
+        <div class="payment-canceled-content">
+            <div class="payment-icon error">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M15 9l-6 6"></path>
+                    <path d="M9 9l6 6"></path>
+                </svg>
+            </div>
+            <h1 class="payment-canceled-title">Payment Not Processed</h1>
+            <p class="payment-canceled-message">There was a problem processing your payment. Please try again or contact
+                customer support for assistance.</p>
+            <div class="payment-actions">
+                <a href="/cart/" class="button primary">Return to Cart</a>
+                <a href="/contact/" class="button secondary">Contact Support</a>
+            </div>
+            <div class="payment-help-info">
+                <p>If you have any questions, our customer support team is ready to help you.</p>
+                <p>Order reference: #{{ request.session.order_id }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -4,16 +4,19 @@ from django.conf import settings
 from .models import Product
 
 # establish a connection with redis
-redis_connection = redis.Redis(
-    host=settings.REDIS_HOST,
-    port=settings.REDIS_PORT,
-    db=settings.REDIS_DB,
-)
+try:
+    redis_connection = redis.Redis(
+        host=settings.REDIS_HOST,
+        port=settings.REDIS_PORT,
+        db=settings.REDIS_DB,
+    )
+except redis.ConnectionError as e:
+    raise Exception("Redis connection failed") from e
 
 
 class ProductRecommender:
-    def get_product_key(self, id):
-        return f"product:{id}:purchased with"
+    def get_product_key(self, product_id):
+        return f"product:{product_id}:purchased with"
 
     def products_bought_together(self, products):
         product_ids = [product.id for product in products]
@@ -26,8 +29,9 @@ class ProductRecommender:
     def fetch_recommended_products(self, products, max_results=6):
         product_ids = [product.id for product in products]
         if len(products) == 1:
-            # only one product
-            recommendations = redis_connection.zrange(self.get_product_key(product_ids[0]), 0, -1,desc=True)[:max_results]
+            # single product
+            recommendations = redis_connection.zrange(self.get_product_key(product_ids[0]), 0, -1, desc=True)[
+                              :max_results]
         else:
             flat_ids = ''.join([str(id) for id in product_ids])
             temp_key = f"tmp_{flat_ids}"
@@ -44,5 +48,5 @@ class ProductRecommender:
         recommended_products_ids = [int(id) for id in recommendations]
         # get suggested products and sort by order of appearance
         recommended_products = list(Product.objects.filter(id__in=recommended_products_ids))
-        recommended_products.sort(key=lambda x: recommended_products_ids.index(x.id))
+        recommended_products.sort(key=lambda product: recommended_products_ids.index(product.id))
         return recommended_products

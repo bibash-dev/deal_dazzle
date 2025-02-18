@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Deal Dazzle - Your one-stop shop for amazing deals and offers.">
     <title>{% block title %}Deal Dazzle{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org"></script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +18,9 @@
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
     <link rel="stylesheet" href="{% static 'css/order_create.css' %}">
     <link rel="stylesheet" href="{% static 'css/process.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'css/completed.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canceled.css' %}">
+<!--</head>-->
 <body>
     <!-- Header Section -->
     <header class="header" role="banner">

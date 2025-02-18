@@ -1,375 +1,863 @@
 :root {
-    --primary-color: #4f46e5;
-    --primary-hover: #4338ca;
-    --secondary-color: #6b7280;
-    --danger-color: #ef4444;
-    --success-color: #10b981;
-    --text-primary: #1f2937;
-    --text-secondary: #6b7280;
-    --background: #ffffff;
-    --border-color: #e5e7eb;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    --radius: 1rem;
-    --radius-sm: 0.5rem;
-    --transition: all 0.3s ease;
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --primary-light: #e0e7ff;
+  --primary-gradient: linear-gradient(135deg, #4f46e5, #7c3aed);
+  --secondary: #ec4899;
+  --secondary-dark: #db2777;
+  --secondary-light: #fce7f3;
+  --accent: #8b5cf6;
+  --accent-light: #ede9fe;
+  --text: #1f2937;
+  --text-light: #6b7280;
+  --text-lighter: #9ca3af;
+  --background: #ffffff;
+  --background-alt: #f9fafb;
+  --background-darker: #f1f5f9;
+  --border: #e5e7eb;
+  --success: #10b981;
+  --success-light: #d1fae5;
+  --success-gradient: linear-gradient(135deg, #10b981, #059669);
+  --error: #ef4444;
+  --error-light: #fee2e2;
+  --discount: #059669;
+  --discount-light: #ecfdf5;
+  --card-glass: rgba(255, 255, 255, 0.8);
+
+  /* Enhanced Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-hover: 0 25px 35px -12px rgb(59 130 246 / 0.2);
+  --shadow-glow: 0 0 15px rgba(79, 70, 229, 0.4);
+
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Refined Transitions */
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
 }
 
-.wrapper {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #f9fafb;
+/* Main Container with Custom Background */
+.dd-review-pay-wrapper {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at top left, rgba(79, 70, 229, 0.1), transparent 70%),
+    radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.1), transparent 70%),
+    var(--background-alt);
+  padding: 3rem 1.5rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+.dd-review-pay-main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
-.main-content {
-    flex: 1;
-    padding: 3rem 0;
+/* Improved Progress Steps */
+.dd-review-pay-progress-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3.5rem;
+  position: relative;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 2rem;
 }
 
-/* Checkout Progress */
-.checkout-progress {
-    background: var(--background);
-    padding: 2rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    margin-bottom: 2rem;
+.dd-review-pay-progress-steps::before {
+  content: '';
+  position: absolute;
+  top: 2rem;
+  left: 4rem;
+  right: 4rem;
+  height: 3px;
+  background: var(--border);
+  z-index: 0;
+  border-radius: var(--radius-full);
 }
 
-.checkout-progress::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--border-color);
-    transform: translateY(-50%);
-    z-index: 0;
+.dd-review-pay-progress-steps::after {
+  content: '';
+  position: absolute;
+  top: 2rem;
+  left: 4rem;
+  height: 3px;
+  background: var(--primary-gradient);
+  border-radius: var(--radius-full);
+  z-index: 1;
+  transition: width 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
 }
 
-.progress-step {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: var(--background);
-    padding: 0 1rem;
+.dd-review-pay-progress-steps[data-progress="1"]::after {
+  width: 0%;
 }
 
-.step-icon {
-    width: 3rem;
-    height: 3rem;
-    background: var(--background);
-    border: 2px solid var(--border-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    transition: var(--transition);
+.dd-review-pay-progress-steps[data-progress="2"]::after {
+  width: 50%;
 }
 
-.step-icon svg {
-    width: 1.5rem;
-    height: 1.5rem;
+.dd-review-pay-progress-steps[data-progress="3"]::after {
+  width: 100%;
 }
 
-.step-content {
-    transition: var(--transition);
+.dd-review-pay-progress-step {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  text-align: center;
 }
 
-.step-content h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0 0 0.25rem 0;
+.dd-review-pay-step-icon {
+  width: 4rem;
+  height: 4rem;
+  background: var(--card-glass);
+  backdrop-filter: blur(8px);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  transition: var(--transition-bounce);
+  box-shadow: var(--shadow-sm);
+  position: relative;
 }
 
-.step-content p {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    margin: 0;
+.dd-review-pay-step-icon svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  stroke-width: 2;
+  transition: var(--transition);
 }
 
-.progress-step.completed .step-icon {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-    color: white;
+.dd-review-pay-step-label {
+  font-weight: 600;
+  color: var(--text-light);
+  font-size: 0.875rem;
+  transition: var(--transition);
+  position: relative;
 }
 
-.progress-step.active .step-icon {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
+.dd-review-pay-step-label::after {
+  content: '';
+  position: absolute;
+  bottom: -0.25rem;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transform: translateX(-50%);
+  transition: var(--transition);
+  border-radius: var(--radius-full);
 }
 
-.progress-step.completed .step-content h3,
-.progress-step.active .step-content h3 {
-    color: var(--primary-color);
+.dd-review-pay-step-description {
+  color: var(--text-lighter);
+  font-size: 0.75rem;
+  max-width: 150px;
+  transition: var(--transition);
+  opacity: 0.8;
 }
 
-/* Order Card */
-.order-card {
-    background: var(--background);
-    padding: 2rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    max-width: 48rem;
-    margin: 0 auto;
+.dd-review-pay-progress-step.dd-review-pay-completed .dd-review-pay-step-icon {
+  background: var(--success-light);
+  border-color: var(--success);
+  color: var(--success);
+  box-shadow: 0 0 0 4px var(--success-light);
+  transform: scale(1.05);
 }
 
-.order-header {
-    margin-bottom: 2rem;
+.dd-review-pay-progress-step.dd-review-pay-completed .dd-review-pay-step-icon::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: var(--radius-full);
+  background: var(--success-light);
+  opacity: 0.2;
+  z-index: -1;
 }
 
-.order-header h1 {
-    font-size: 1.875rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 0.5rem 0;
+.dd-review-pay-progress-step.dd-review-pay-active .dd-review-pay-step-icon {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: var(--shadow-md), 0 0 12px rgba(79, 70, 229, 0.6);
+  transform: scale(1.1) translateY(-5px);
 }
 
-.order-subtitle {
-    color: var(--text-secondary);
-    margin: 0;
+.dd-review-pay-progress-step.dd-review-pay-active .dd-review-pay-step-icon::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: var(--radius-full);
+  background: var(--primary-light);
+  opacity: 0.3;
+  z-index: -1;
+  animation: pulse 3s infinite;
 }
 
-/* Order Items */
-.order-items {
-    border-top: 1px solid var(--border-color);
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
 }
 
-.order-item {
-    padding: 1.5rem 0;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 1.5rem;
-    align-items: center;
-    border-bottom: 1px solid var(--border-color);
+.dd-review-pay-progress-step.dd-review-pay-completed .dd-review-pay-step-label,
+.dd-review-pay-progress-step.dd-review-pay-active .dd-review-pay-step-label {
+  color: var(--text);
 }
 
-.item-image {
-    width: 80px;
-    height: 80px;
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
+.dd-review-pay-progress-step.dd-review-pay-completed .dd-review-pay-step-label::after,
+.dd-review-pay-progress-step.dd-review-pay-active .dd-review-pay-step-label::after {
+  width: 70%;
 }
 
-.item-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.dd-review-pay-progress-step.dd-review-pay-completed .dd-review-pay-step-description,
+.dd-review-pay-progress-step.dd-review-pay-active .dd-review-pay-step-description {
+  opacity: 1;
 }
 
-.item-details h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0 0 0.5rem 0;
+/* Glass-Morphic Review Card */
+.dd-review-pay-review-card {
+  background: var(--card-glass);
+  backdrop-filter: blur(15px);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  max-width: 800px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  transform: translateY(0);
+  transition: var(--transition-slow);
+  position: relative;
 }
 
-.item-meta {
-    display: flex;
-    gap: 1rem;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
+.dd-review-pay-review-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+  border-radius: inherit;
+  opacity: 0;
+  transition: var(--transition);
 }
 
-.item-meta span {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
+.dd-review-pay-review-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover), var(--shadow-glow);
 }
 
-.item-meta svg {
-    opacity: 0.7;
+.dd-review-pay-review-card:hover::before {
+  opacity: 1;
 }
 
-.item-total {
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 1.125rem;
+.dd-review-pay-review-header {
+  padding: 2.5rem 2.5rem 2rem;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+  background: rgba(249, 250, 251, 0.7);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Order Summary */
-.order-summary {
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background: #f9fafb;
-    border-radius: var(--radius-sm);
+.dd-review-pay-review-header::after {
+  content: '';
+  position: absolute;
+  height: 3px;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  background: var(--primary-gradient);
+  opacity: 0.8;
 }
 
-.summary-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75rem 0;
-    color: var(--text-secondary);
+.dd-review-pay-review-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 0.5rem;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.summary-row.discount {
-    color: var(--success-color);
+.dd-review-pay-review-subtitle {
+  color: var(--text-light);
+  font-size: 0.875rem;
+  max-width: 80%;
 }
 
-.summary-row.discount span {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+/* Enhanced Order Items */
+.dd-review-pay-order-items {
+  padding: 2rem 2.5rem;
 }
 
-.shipping-free {
-    color: var(--success-color);
-    font-weight: 500;
+.dd-review-pay-order-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  background: rgba(249, 250, 251, 0.7);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  transition: var(--transition-slow);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
 }
 
-.summary-row.total {
-    padding-top: 1rem;
-    margin-top: 0.5rem;
-    border-top: 2px solid var(--border-color);
-    color: var(--text-primary);
-    font-weight: 700;
-    font-size: 1.25rem;
+.dd-review-pay-order-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(224, 231, 255, 0.2), transparent);
+  opacity: 0;
+  transition: var(--transition);
+  z-index: 0;
 }
 
-/* Payment Security */
-.payment-security {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-around;
+.dd-review-pay-order-item > * {
+  position: relative;
+  z-index: 1;
 }
 
-.security-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
+.dd-review-pay-order-item:hover {
+  transform: translateX(8px) scale(1.01);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(79, 70, 229, 0.3);
 }
 
-.security-item svg {
+.dd-review-pay-order-item:hover::before {
+  opacity: 1;
+}
+
+.dd-review-pay-item-image {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.dd-review-pay-item-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--primary-gradient);
+  opacity: 0;
+  transition: var(--transition);
+  mix-blend-mode: overlay;
+}
+
+.dd-review-pay-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-slow);
+}
+
+.dd-review-pay-order-item:hover .dd-review-pay-item-image img {
+  transform: scale(1.08);
+}
+
+.dd-review-pay-order-item:hover .dd-review-pay-item-image::after {
+  opacity: 0.2;
+}
+
+.dd-review-pay-item-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.dd-review-pay-item-name {
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  font-size: 1.125rem;
+  transition: var(--transition);
+}
+
+.dd-review-pay-order-item:hover .dd-review-pay-item-name {
+  color: var(--primary);
+}
+
+.dd-review-pay-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dd-review-pay-item-price {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.dd-review-pay-item-quantity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--background);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  color: var(--text-light);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.dd-review-pay-order-item:hover .dd-review-pay-item-quantity {
+  background: var(--primary-light);
+  border-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.dd-review-pay-item-total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.dd-review-pay-total-label {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dd-review-pay-total-amount {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.dd-review-pay-order-item:hover .dd-review-pay-total-amount {
+  color: var(--primary);
+  transform: scale(1.05);
+}
+
+/* Enhanced Order Summary */
+.dd-review-pay-order-summary {
+  background: rgba(249, 250, 251, 0.7);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  margin: 0 2.5rem 2rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  transition: var(--transition);
+}
+
+.dd-review-pay-order-summary:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: rgba(79, 70, 229, 0.2);
+}
+
+.dd-review-pay-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  color: var(--text-light);
+  transition: var(--transition);
+}
+
+.dd-review-pay-summary-row:not(:last-child) {
+  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.dd-review-pay-summary-row:hover {
+  transform: translateX(5px);
+  color: var(--text);
+}
+
+.dd-review-pay-summary-row.dd-review-pay-discount {
+  color: var(--discount);
+  background: var(--discount-light);
+  margin: 0.75rem -1.75rem;
+  padding: 1.25rem 1.75rem;
+  border-left: 3px solid var(--discount);
+  position: relative;
+  overflow: hidden;
+}
+
+.dd-review-pay-summary-row.dd-review-pay-discount::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: var(--discount);
+}
+
+.dd-review-pay-summary-row.dd-review-pay-discount::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: 100%; }
+}
+
+.dd-review-pay-shipping-free {
+  color: var(--success);
+  font-weight: 500;
+  transition: var(--transition);
+  position: relative;
+}
+
+.dd-review-pay-shipping-free::after {
+  content: '✓';
+  margin-left: 0.25rem;
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: var(--transition);
+}
+
+.dd-review-pay-summary-row:hover .dd-review-pay-shipping-free::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.dd-review-pay-summary-row.dd-review-pay-total {
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-top: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(229, 231, 235, 0.7);
+}
+
+.dd-review-pay-summary-row.dd-review-pay-total:hover {
+  transform: scale(1.01) translateX(5px);
+}
+
+/* Improved Shipping Cost Display Styles */
+.dd-review-pay-shipping-free {
+  font-weight: 600;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+}
+
+.dd-review-pay-shipping-cost {
+  color: var(--error);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+}
+
+.dd-review-pay-shipping-cost::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--error);
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  opacity: 0.7;
+}
+
+.dd-review-pay-shipping-free::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  opacity: 0.7;
+}
+
+/* Enhanced Security Features */
+.dd-review-pay-security-features {
+  display: flex;
+  justify-content: center;
+  gap: 3.5rem;
+  padding: 2.5rem;
+  border-top: 1px solid rgba(229, 231, 235, 0.5);
+  background: rgba(249, 250, 251, 0.5);
+}
+
+.dd-review-pay-security-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-light);
+  transition: var(--transition-bounce);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+}
+
+.dd-review-pay-security-item:hover {
+  color: var(--primary);
+  transform: translateY(-5px);
+  background: rgba(224, 231, 255, 0.3);
+}
+
+.dd-review-pay-security-item svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--primary);
+  transition: var(--transition);
+  filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.3));
+}
+
+.dd-review-pay-security-item:hover svg {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 5px rgba(79, 70, 229, 0.5));
+}
+
+/* Enhanced Payment Button */
+.dd-review-pay-payment-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: calc(100% - 5rem);
+  margin: 0 2.5rem 2.5rem;
+  padding: 1.25rem;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow), 0 0 0 0 rgba(79, 70, 229, 0.5);
+}
+
+.dd-review-pay-payment-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.75s;
+}
+
+.dd-review-pay-payment-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(79, 70, 229, 0.5);
+}
+
+.dd-review-pay-payment-button:hover::before {
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.dd-review-pay-payment-button svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: var(--transition);
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+}
+
+.dd-review-pay-payment-button:hover svg {
+  transform: translateX(4px) scale(1.1);
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(4px);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+/* Responsive Design with Enhanced Mobile Experience */
+@media (max-width: 768px) {
+  .dd-review-pay-wrapper {
+    padding: 2rem 1rem;
+  }
+
+  .dd-review-pay-progress-steps::before {
+    left: 2rem;
+    right: 2rem;
+  }
+
+  .dd-review-pay-progress-steps::after {
+    left: 2rem;
+  }
+
+  .dd-review-pay-step-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .dd-review-pay-step-icon svg {
     width: 1.25rem;
     height: 1.25rem;
-}
+  }
 
-/* Payment Form */
-.payment-form {
-    margin-top: 2rem;
-}
+  .dd-review-pay-step-description {
+    display: none;
+  }
 
-.pay-button {
-    width: 100%;
-    display: flex;
+  .dd-review-pay-review-card {
+    margin: 0 0.5rem;
+  }
+
+  .dd-review-pay-review-header,
+  .dd-review-pay-order-items {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .dd-review-pay-order-item {
+    grid-template-columns: 60px 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .dd-review-pay-item-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .dd-review-pay-item-total {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    background: var(--primary-color);
-    color: white;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .dd-review-pay-order-summary {
+    margin: 0 1.5rem 2rem;
+    padding: 1.5rem;
+  }
+
+  .dd-review-pay-summary-row.dd-review-pay-discount {
+    margin: 0.5rem -1.5rem;
     padding: 1rem 1.5rem;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 1.125rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-}
+  }
 
-.pay-button:hover {
-    background: var(--primary-hover);
-    transform: translateY(-1px);
-}
+  .dd-review-pay-security-features {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem 1.5rem;
+  }
 
-.pay-button svg {
-    width: 1.5rem;
-    height: 1.5rem;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .main-content {
-        padding: 2rem 0;
-    }
-
-    .order-card {
-        padding: 1.5rem;
-    }
-
-    .order-header h1 {
-        font-size: 1.5rem;
-    }
-
-    .progress-step .step-content {
-        display: none;
-    }
-
-    .checkout-progress {
-        justify-content: space-around;
-        padding: 1.5rem;
-    }
-
-    .order-item {
-        grid-template-columns: auto 1fr;
-        gap: 1rem;
-    }
-
-    .item-total {
-        grid-column: 1 / -1;
-        text-align: right;
-        padding-top: 0.5rem;
-    }
-
-    .payment-security {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: center;
-    }
+  .dd-review-pay-payment-button {
+    width: calc(100% - 3rem);
+    margin: 0 1.5rem 2rem;
+  }
 }
 
 @media (max-width: 480px) {
-    .container {
-        padding: 0 1rem;
-    }
+  .dd-review-pay-wrapper {
+    padding: 1.5rem 0.75rem;
+  }
 
-    .order-card {
-        padding: 1rem;
-    }
+  .dd-review-pay-progress-steps {
+    padding: 0 1rem;
+    margin-bottom: 2.5rem;
+  }
 
-    .item-image {
-        width: 60px;
-        height: 60px;
-    }
+  .dd-review-pay-progress-steps::before,
+  .dd-review-pay-progress-steps::after {
+    top: 1.75rem;
+  }
 
-    .item-details h3 {
-        font-size: 0.875rem;
-    }
+  .dd-review-pay-step-icon {
+    width: 3rem;
+    height: 3rem;
+  }
 
-    .item-meta {
-        font-size: 0.75rem;
-    }
+  .dd-review-pay-step-icon svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
 
-    .summary-row.total {
-        font-size: 1.125rem;
-    }
+  .dd-review-pay-step-label {
+    font-size: 0.75rem;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-    .step-icon {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
+  .dd-review-pay-review-title {
+    font-size: 1.5rem;
+  }
 
-    .step-icon svg {
-        width: 1.25rem;
-        height: 1.25rem;
-    }
+  .dd-review-pay-review-subtitle {
+    font-size: 0.8125rem;
+  }
+
+  .dd-review-pay-order-summary {
+    margin: 0 1rem 1.75rem;
+    padding: 1.25rem;
+  }
+
+  .dd-review-pay-summary-row.dd-review-pay-discount {
+    margin: 0.5rem -1.25rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .dd-review-pay-payment-button {
+    width: calc(100% - 2rem);
+    margin: 0 1rem 1.75rem;
+    padding: 1.125rem;
+  }
 }
