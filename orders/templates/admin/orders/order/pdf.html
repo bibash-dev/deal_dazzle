@@ -1,154 +1,91 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deal Dazzle - Invoice #29</title>
-    <style>
-        /* Modern CSS Reset */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <title>Invoice - Order {{ order.id }}</title>
+    {% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/pdf.css' %}">
+    {% endblock
+</head>
+<body>
+    <div class="pdf-invoice-container">
+        <header class="pdf-invoice-header">
+            <div class="pdf-company-info">
+                <h1>Deal Dazzle</h1>
+                <div class="pdf-invoice-details">
+                    <strong>Invoice #{{ order.id }}</strong>
+                    <span class="pdf-date">{{ order.created|date:"M d, Y" }}</span>
+                </div>
+            </div>
+            <div class="pdf-status-badge {% if order.paid %}pdf-paid{% else %}pdf-pending{% endif %}">
+                {% if order.paid %}Paid{% else %}Pending payment{% endif %}
+            </div>
+        </header>
 
-        /* Custom Properties */
-        :root {
-            --color-primary: #6366f1;
-            --color-text: #374151;
-            --color-text-light: #6b7280;
-            --color-success: #10b981;
-            --color-danger: #ef4444;
-            --color-background: #ffffff;
-            --color-surface: #f9fafb;
-            --color-border: #e5e7eb;
+        <section class="pdf-billing-info">
+            <div class="pdf-section-title">
+                <h2>Bill to</h2>
+            </div>
+            <div class="pdf-customer-details">
+                <p class="pdf-customer-name">{{ order.first_name }} {{ order.last_name }}</p>
+                <p class="pdf-customer-email">{{ order.email }}</p>
+                <p class="pdf-customer-address">
+                    {{ order.address }}<br>
+                    {{ order.postal_code }}, {{ order.city }}
+                </p>
+            </div>
+        </section>
 
-            --space-xs: 0.5rem;
-            --space-sm: 0.75rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2rem;
-            --space-2xl: 3rem;
+        <section class="pdf-order-details">
+            <div class="pdf-section-title">
+                <h2>Order Summary</h2>
+            </div>
+            <div class="pdf-table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td class="pdf-num">${{ item.price|floatformat:2 }}</td>
+                            <td class="pdf-num">{{ item.quantity }}</td>
+                            <td class="pdf-num">${{ item.get_cost|floatformat:2 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-            --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            --font-mono: 'SF Mono', Monaco, Consolas, monospace;
-        }
+        <section class="pdf-invoice-summary">
+            {% if order.coupon %}
+            <div class="pdf-summary-row">
+                <span>Subtotal</span>
+                <span class="pdf-num">${{ order.get_total_cost_before_discount|floatformat:2 }}</span>
+            </div>
+            <div class="pdf-summary-row pdf-discount">
+                <span>Discount ({{ order.coupon.code }} - {{ order.discount }}%)</span>
+                <span class="pdf-num">-${{ order.get_discount|floatformat:2 }}</span>
+            </div>
+            {% endif %}
+            <div class="pdf-summary-row pdf-total">
+                <span>Total Amount</span>
+                <span class="pdf-num">${{ order.get_total_cost|floatformat:2 }}</span>
+            </div>
+        </section>
 
-        /* Base Styles */
-        body {
-            font-family: var(--font-sans);
-            color: var(--color-text);
-            line-height: 1.5;
-            background-color: var(--color-background);
-            padding: var(--space-2xl);
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        /* Typography */
-        h1, h2, h3 {
-            color: var(--color-text);
-            font-weight: 600;
-        }
-
-        /* Layout Components */
-        .invoice-header {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: var(--space-xl);
-            margin-bottom: var(--space-2xl);
-            padding-bottom: var(--space-xl);
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .brand-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--color-primary);
-        }
-
-        .invoice-info {
-            text-align: right;
-        }
-
-        .invoice-number {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: var(--space-xs);
-        }
-
-        .invoice-date {
-            color: var(--color-text-light);
-            font-size: 0.875rem;
-        }
-
-        .billing-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-2xl);
-            margin-bottom: var(--space-2xl);
-        }
-
-        .billing-section h2 {
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--color-text-light);
-            margin-bottom: var(--space-md);
-        }
-
-        /* Table Styles */
-        .invoice-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: var(--space-xl) 0;
-            font-size: 0.875rem;
-        }
-
-        .invoice-table th {
-            background-color: var(--color-surface);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--color-text-light);
-            padding: var(--space-md);
-            text-align: left;
-        }
-
-        .invoice-table td {
-            padding: var(--space-md);
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .invoice-table .numeric {
-            text-align: right;
-            font-family: var(--font-mono);
-        }
-
-        .subtotal-row {
-            background-color: var(--color-surface);
-            font-weight: 500;
-        }
-
-        .discount-row {
-            color: var(--color-danger);
-        }
-
-        .total-row {
-            background-color: var(--color-primary);
-            color: white;
-        }
-
-        .total-row td {
-            padding: var(--space-lg);
-            border: none;
-        }
-
-        /*
+        <footer class="pdf-invoice-footer">
+            <p>We appreciate your purchase at Deal Dazzle!</p>
+        </footer>
+    </div>
+</body>
+</html>

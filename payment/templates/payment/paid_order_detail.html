@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Order #{{ order.id }} Details{% endblock %}
+{% block content %}
+<div class="paid-wrapper">
+    <main class="paid-main-content">
+        <div class="paid-container">
+            <div class="paid-card">
+                <div class="paid-header-banner {% if order.paid %}paid-success{% else %}paid-pending{% endif %}">
+                    <div class="paid-header-content">
+                        <div class="paid-order-info">
+                            <span class="paid-order-label">Order</span>
+                            <h1 class="paid-order-number">#{{ order.id }}</h1>
+                            <time class="paid-order-date">{{ order.created|date:"F d, Y" }}</time>
+                        </div>
+                        <div class="paid-status">
+                            <div class="paid-status-indicator"></div>
+                            <span class="paid-status-text">{% if order.paid %}Paid{% else %}Pending payment{% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="paid-progress-tracker">
+                    <div class="paid-progress-step {% if order.paid %}paid-complete{% endif %}" data-step="1">
+                        <div class="paid-step-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <div class="paid-step-content">
+                            <h3>Order Placed</h3>
+                            <p>{{ order.created|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="paid-progress-step {% if order.paid %}paid-complete{% endif %}" data-step="2">
+                        <div class="paid-step-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div class="paid-step-content">
+                            <h3>Payment</h3>
+                            <p>{% if order.paid %}{{ order.paid_at|date:"M d, Y" }}{% else %}Pending{% endif %}</p>
+                        </div>
+                    </div>
+                    <div class="paid-progress-step {% if order.shipped %}paid-complete{% endif %}" data-step="3">
+                        <div class="paid-step-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13"></rect>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                            </svg>
+                        </div>
+                        <div class="paid-step-content">
+                            <h3>Shipping</h3>
+                            <p>{% if order.shipped %}{{ order.shipped_at|date:"M d, Y" }}{% else %}Preparing{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="paid-content">
+                    <div class="paid-grid">
+                        <section class="paid-section paid-customer-section">
+                            <div class="paid-section-header">
+                                <h2>Customer Details</h2>
+                            </div>
+                            <div class="paid-customer-card">
+                                <div class="paid-customer-avatar">{{ order.first_name|make_list|first }}{{ order.last_name|make_list|first }}</div>
+                                <div class="paid-customer-info">
+                                    <h3>{{ order.first_name }} {{ order.last_name }}</h3>
+                                    <p>{{ order.email }}</p>
+                                    <div class="paid-address">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                        <span>
+                                            {{ order.address }}<br>
+                                            {{ order.postal_code }}, {{ order.city }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="paid-section paid-order-items">
+                            <div class="paid-section-header">
+                                <h2>Order Items</h2>
+                            </div>
+                            <div class="paid-items-list">
+                                {% for item in order.items.all %}
+                                <div class="paid-item">
+                                    <div class="paid-item-image">
+                                        {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                        {% else %}
+                                        <div class="paid-no-image">No Image</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="paid-item-details">
+                                        <h3>{{ item.product.name }}</h3>
+                                        <div class="paid-item-meta">
+                                            <span class="paid-quantity">Qty: {{ item.quantity }}</span>
+                                            <span class="paid-price">${{ item.price|floatformat:2 }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="paid-item-total">${{ item.get_cost|floatformat:2 }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+
+                        <section class="paid-section paid-summary-section">
+                            <div class="paid-section-header">
+                                <h2>Payment Summary</h2>
+                            </div>
+                            <div class="paid-summary-card">
+                                <div class="paid-summary-row">
+                                    <span>Subtotal</span>
+                                    <span>${{ order.get_total_cost_before_discount|floatformat:2 }}</span>
+                                </div>
+                                {% if order.coupon %}
+                                <div class="paid-summary-row paid-discount">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        {{ order.coupon.code }} ({{ order.discount }}% off)
+                                    </span>
+                                    <span>-${{ order.get_discount|floatformat:2 }}</span>
+                                </div>
+                                {% endif %}
+                                {% if order.shipping_cost %}
+                                <div class="paid-summary-row">
+                                    <span>Shipping</span>
+                                    <span>-${{ order.get_shipping_cost|floatformat:2  }}</span>
+                                </div>
+                                {% endif %}
+                                <div class="paid-summary-total">
+                                    <span>Total</span>
+                                    <span>${{ order.get_total_cost_with_shipping_cost|floatformat:2 }}</span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="paid-actions">
+                        <a href="{% url 'orders:admin_order_pdf' order.id %}" class="paid-button paid-secondary" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download Invoice
+                        </a>
+                        <a href="{% url 'store:product_list' %}" class="paid-button paid-primary">
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

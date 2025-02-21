@@ -173,9 +173,29 @@
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-lg);
     box-shadow: var(--glass-shadow);
-    overflow: hidden;
+    overflow: auto;
     scroll-behavior: smooth;
     max-height: calc(100vh - 200px);
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-light) var(--bg-gray-light);
+}
+
+.cart-items::-webkit-scrollbar {
+    width: 1px;
+}
+
+.cart-items::-webkit-scrollbar-track {
+    background: var(--bg-gray-light);
+    border-radius: var(--radius);
+}
+
+.cart-items::-webkit-scrollbar-thumb {
+    background: var(--primary-light);
+    border-radius: var(--radius);
+}
+
+.cart-items::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
 }
 
 .cart-item {

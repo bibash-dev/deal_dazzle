@@ -1,0 +1,441 @@
+/* Modern Order Detail Styles */
+:root {
+    --color-primary: #6366f1;
+    --color-primary-dark: #4f46e5;
+    --color-success: #10b981;
+    --color-success-light: #d1fae5;
+    --color-pending: #f59e0b;
+    --color-pending-light: #fef3c7;
+    --color-text: #1f2937;
+    --color-text-light: #6b7280;
+    --color-border: #e5e7eb;
+    --color-background: #f9fafb;
+    --color-white: #ffffff;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --radius-sm: 0.375rem;
+    --radius: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+}
+
+.paid-wrapper {
+    min-height: 100vh;
+    background-color: var(--color-background);
+    padding: 2rem;
+}
+
+.paid-main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.paid-card {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+/* Header Banner */
+.paid-header-banner {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    padding: 2.5rem 2rem;
+    color: var(--color-white);
+}
+
+.paid-header-banner.paid-success {
+    background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
+}
+
+.paid-header-banner.paid-pending {
+    background: linear-gradient(135deg, var(--color-pending) 0%, #d97706 100%);
+}
+
+.paid-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.paid-order-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.paid-order-label {
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+}
+
+.paid-order-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.paid-order-date {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.paid-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(4px);
+}
+
+.paid-status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-white);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Progress Tracker */
+.paid-progress-tracker {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem;
+    background: linear-gradient(to bottom, rgba(99, 102, 241, 0.05), transparent);
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+}
+
+.paid-progress-tracker::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 3rem;
+    right: 3rem;
+    height: 2px;
+    background-color: var(--color-border);
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.paid-progress-step {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.paid-step-icon {
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--color-white);
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-light);
+    transition: all 0.3s ease;
+}
+
+.paid-step-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.paid-progress-step.paid-complete .paid-step-icon {
+    background-color: var(--color-success);
+    border-color: var(--color-success);
+    color: var(--color-white);
+}
+
+.paid-step-content {
+    text-align: center;
+}
+
+.paid-step-content h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+}
+
+.paid-step-content p {
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+}
+
+/* Content Grid */
+.paid-content {
+    padding: 2rem;
+}
+
+.paid-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Section Styles */
+.paid-section {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+}
+
+.paid-section-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    background: linear-gradient(to bottom, var(--color-background), transparent);
+}
+
+.paid-section-header h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* Customer Card */
+.paid-customer-card {
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.paid-customer-avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.paid-customer-info h3 {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.paid-address {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+}
+
+.paid-address svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
+/* Items List */
+.paid-items-list {
+    padding: 1rem;
+}
+
+.paid-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.paid-item:last-child {
+    border-bottom: none;
+}
+
+.paid-item-image {
+    width: 4rem;
+    height: 4rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-background);
+}
+
+.paid-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.paid-no-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-light);
+    font-size: 0.75rem;
+}
+
+.paid-item-details {
+    flex: 1;
+}
+
+.paid-item-details h3 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.paid-item-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+}
+
+.paid-item-total {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* Summary Card */
+.paid-summary-card {
+    padding: 1.5rem;
+}
+
+.paid-summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+}
+
+.paid-summary-row.paid-discount {
+    color: var(--color-success);
+}
+
+.paid-summary-row.paid-discount svg {
+    width: 1rem;
+    height: 1rem;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.25rem;
+}
+
+.paid-summary-total {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-text);
+}
+
+/* Action Buttons */
+.paid-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.paid-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.paid-button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.paid-button.paid-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.paid-button.paid-primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+.paid-button.paid-secondary {
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+.paid-button.paid-secondary:hover {
+    background-color: var(--color-border);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .paid-wrapper {
+        padding: 1rem;
+    }
+
+    .paid-header-content {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .paid-progress-tracker {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 1.5rem;
+    }
+
+    .paid-progress-tracker::before {
+        left: 50%;
+        top: 3rem;
+        bottom: 3rem;
+        width: 2px;
+        height: auto;
+        transform: translateX(-50%);
+    }
+
+    .paid-progress-step {
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .paid-step-content {
+        text-align: left;
+    }
+
+    .paid-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .paid-actions {
+        flex-direction: column;
+    }
+
+    .paid-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

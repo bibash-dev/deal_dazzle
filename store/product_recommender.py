@@ -36,7 +36,7 @@ class ProductRecommender:
             flat_ids = ''.join([str(id) for id in product_ids])
             temp_key = f"tmp_{flat_ids}"
             # multiple products, combine score of all products
-            # store the resulting sorted det in a temporary key
+            # store the resulting sorted set in a temporary key
             keys = [self.get_product_key(id) for id in product_ids]
             redis_connection.zunionstore(temp_key, keys)
             # remove ids for the products the recommendation is for

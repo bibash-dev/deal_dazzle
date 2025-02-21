@@ -90,12 +90,18 @@ def payment_process(request):
 
 
 def payment_completed(request):
-    # Clear the order_id from the session to prevent reuse
-    if 'order_id' in request.session:
-        del request.session['order_id']
-
     return render(request, 'payment/completed.html')
 
 
 def payment_canceled(request):
     return render(request, 'payment/canceled.html')
+
+
+def show_detail_order(request):
+    order_id = request.session.get('order_id')
+    if not order_id:
+        messages.error(request, "No order found. Please place an order first.")
+        return redirect('cart:cart_detail')
+
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'payment/paid_order_detail.html', {'order': order})

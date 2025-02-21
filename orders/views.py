@@ -96,3 +96,4 @@ def admin_order_pdf(request, order_id):
         return HttpResponse(f"Failed to generate PDF: {str(e)}", status=500)
 
     return response
+

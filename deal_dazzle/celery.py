@@ -1,7 +1,7 @@
 import os
 from celery import Celery
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'deal_dazzle.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'deal_dazzle.settings.local')
 
 app = Celery('deal_dazzle')
 app.config_from_object('django.conf:settings', namespace='CELERY')

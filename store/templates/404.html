@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,122 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 Page Not Found</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #3b82f6;
-            --primary-dark: #2563eb;
-            --primary-light: #60a5fa;
-            --primary-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
-            --success-color: #10b981;
-            --error-color: #ef4444;
-            --text-primary: #1f2937;
-            --bg-white: #ffffff;
-            --bg-gray-light: #f3f4f6;
-            --radius-lg: 1rem;
-            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: var(--bg-gray-light);
-            color: var(--text-primary);
-            overflow: hidden;
-        }
-
-        .error-container {
-            text-align: center;
-            padding: 3rem;
-            background: var(--bg-white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 600px;
-            transform: translateY(-30px);
-            animation: slideIn 0.6s ease-in-out;
-        }
-
-        .error-container h1 {
-            font-size: 5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        .error-container h2 {
-            font-size: 1.25rem;
-            font-weight: 400;
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-        }
-
-        .error-description {
-            font-size: 1rem;
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-        }
-
-        .error-button {
-            display: inline-flex;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: var(--primary-gradient);
-            color: var(--bg-white);
-            border: none;
-            border-radius: var(--radius-lg);
-            font-size: 1.125rem;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-        }
-
-        .error-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 18px rgba(59, 130, 246, 0.2);
-        }
-
-        .error-button:active {
-            transform: translateY(0);
-        }
-
-        .error-button svg {
-            margin-right: 0.75rem;
-            width: 1.5rem;
-            height: 1.5rem;
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideIn {
-            0% {
-                transform: translateY(-50px);
-            }
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-    </style>
+     <link rel="stylesheet" href="{% static 'css/404.css' %}">
 </head>
 <body>
-
 <div class="error-container">
     <h1>404</h1>
     <h2>Oops! Page Not Found</h2>
@@ -134,6 +22,5 @@
         Go Back Home
     </a>
 </div>
-
 </body>
 </html>
